@@ -81,14 +81,14 @@ def OP_RETURN_send(send_address, send_amount, metadata, testnet=False):
 	
 	# Calculate amounts and choose inputs
 
-	output_amount=send_amount+OP_RETURN_BTC_FEE
+	output_amount=round(send_amount+OP_RETURN_BTC_FEE, 8)
 
 	inputs_spend=OP_RETURN_select_inputs(output_amount, testnet)
 	
 	if 'error' in inputs_spend:
 		return {'error': inputs_spend['error']}
 	
-	change_amount=inputs_spend['total']-output_amount
+	change_amount=round(inputs_spend['total']-output_amount, 8)
 
 	# Build the raw transaction
 		
