@@ -37,18 +37,18 @@ except NameError:
 # User-defined quasi-constants
 
 OP_RETURN_BITCOIN_IP='127.0.0.1' # IP address of your bitcoin node
-OP_RETURN_BITCOIN_USE_CMD=False # use command-line instead of JSON-RPC?
+OP_RETURN_BITCOIN_USE_CMD=True # use command-line instead of JSON-RPC?
 
 if OP_RETURN_BITCOIN_USE_CMD:
-	OP_RETURN_BITCOIN_PATH='/usr/bin/bitcoin-cli' # path to bitcoin-cli executable on this server
+	OP_RETURN_BITCOIN_PATH= os.path.expanduser('~') + '/chaucha-cli' # path to bitcoin-cli executable on this server
 	
 else:
 	OP_RETURN_BITCOIN_PORT='' # leave empty to use default port for mainnet/testnet
 	OP_RETURN_BITCOIN_USER='' # leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
 	OP_RETURN_BITCOIN_PASSWORD='' # leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
 	
-OP_RETURN_BTC_FEE=0.0001 # BTC fee to pay per transaction
-OP_RETURN_BTC_DUST=0.00001 # omit BTC outputs smaller than this
+OP_RETURN_BTC_FEE=0.001 # BTC fee to pay per transaction
+OP_RETURN_BTC_DUST=0.0001 # omit BTC outputs smaller than this
 
 OP_RETURN_MAX_BYTES=80 # maximum bytes in an OP_RETURN (80 as of Bitcoin 0.11)
 OP_RETURN_MAX_BLOCKS=10 # maximum number of blocks to try when retrieving data
@@ -441,7 +441,7 @@ def OP_RETURN_bitcoin_cmd(command, testnet, *args): # more params are read from 
 		password=OP_RETURN_BITCOIN_PASSWORD
 		
 		if not (len(port) and len(user) and len(password)):
-			conf_lines=open(os.path.expanduser('~')+'/.bitcoin/bitcoin.conf').readlines()
+			conf_lines=open(os.path.expanduser('~')+'/.chaucha/chaucha.conf').readlines()
 			
 			for conf_line in conf_lines:
 				parts=conf_line.strip().split('=', 1) # up to 2 parts
