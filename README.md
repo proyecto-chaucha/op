@@ -13,9 +13,9 @@ Antes de utilizar se recomienda revisar la configuración en el archivo OP_RETUR
 ### Linea de comandos
 
 #### Sintaxis de uso:
-``python send-OP_RETURN.py <dirección> <monto> <mensaje> <testnet (optional)>``
+``python send-OP_RETURN.py <address> <monto> <mensaje> <testnet (optional)>``
 
-* **<dirección>**: Salida de la transacción a realizar, dirección que mantendrá el registro de mensajes a enviar
+* **<address>**: Salida de la transacción a realizar, dirección que mantendrá el registro de mensajes a enviar
 * **<monto>**: Cantidad de Chauchas a enviar (recomendado: 0.001)
 * **<mensaje>**: Información a escribir en el Blockchain (Max 256 bytes)
 * **<testnet>**: Utilizar la red de pruebas (testnet) para enviar la transacción
