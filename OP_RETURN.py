@@ -43,14 +43,14 @@ if OP_RETURN_BITCOIN_USE_CMD:
 	OP_RETURN_BITCOIN_PATH= os.path.expanduser('~') + '/chaucha-cli' # path to bitcoin-cli executable on this server
 	
 else:
-	OP_RETURN_BITCOIN_PORT='' # leave empty to use default port for mainnet/testnet
-	OP_RETURN_BITCOIN_USER='' # leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
+	OP_RETURN_BITCOIN_PORT='21662' # leave empty to use default port for mainnet/testnet
+	OP_RETURN_BITCOIN_USER='chaucharpc' # leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
 	OP_RETURN_BITCOIN_PASSWORD='' # leave empty to read from ~/.bitcoin/bitcoin.conf (Unix only)
 	
 OP_RETURN_BTC_FEE=0.001 # BTC fee to pay per transaction
 OP_RETURN_BTC_DUST=0.0001 # omit BTC outputs smaller than this
 
-OP_RETURN_MAX_BYTES=80 # maximum bytes in an OP_RETURN (80 as of Bitcoin 0.11)
+OP_RETURN_MAX_BYTES=256 # maximum bytes in an OP_RETURN (256 as of Bitcoin 0.11)
 OP_RETURN_MAX_BLOCKS=10 # maximum number of blocks to try when retrieving data
 
 OP_RETURN_NET_TIMEOUT=10 # how long to time out (in seconds) when communicating with bitcoin node
@@ -334,13 +334,15 @@ def OP_RETURN_create_txn(inputs, outputs, metadata, metadata_pos, testnet):
 	txn_unpacked=OP_RETURN_unpack_txn(OP_RETURN_hex_to_bin(raw_txn))
 	
 	metadata_len=len(metadata)
+
+	print(metadata_len, metadata)
 	
 	if metadata_len<=75:
 		payload=bytearray((metadata_len,))+metadata # length byte + data (https://en.bitcoin.it/wiki/Script)
 	elif metadata_len<=256:
-		payload="\x4c"+bytearray((metadata_len,))+metadata # OP_PUSHDATA1 format
+		payload=b"\x4c"+bytearray((metadata_len,))+metadata # OP_PUSHDATA1 format
 	else:
-		payload="\x4d"+bytearray((metadata_len%256,))+bytearray((int(metadata_len/256),))+metadata # OP_PUSHDATA2 format
+		payload=b"\x4d"+bytearray((metadata_len%256,))+bytearray((int(metadata_len/256),))+metadata # OP_PUSHDATA2 format
 	
 	metadata_pos=min(max(0, metadata_pos), len(txn_unpacked['vout'])) # constrain to valid values
 
